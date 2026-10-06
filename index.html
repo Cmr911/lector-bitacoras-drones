@@ -51,6 +51,7 @@
           <li>Hasta 20 MB y 200.000 filas.</li>
         </ul>
       </div>
+      <p class="sutil" data-herramienta="calculadora" hidden>¿Aún no has volado? <a target="_blank" rel="noopener noreferrer">Calcula mezcla, cargas y costos</a> con la Calculadora de aspersión.</p>
       <p class="privacidad"><strong>Privacidad:</strong> el archivo se procesa solo en este navegador. No se sube a ningún servidor, no usamos cookies ni analítica y no se guarda nada al cerrar la página.</p>
     </section>
 
@@ -87,8 +88,8 @@
         <p class="aviso-predio">El reporte puede revelar la forma y la ubicación del predio (trayectoria y coordenadas). Revísalo antes de compartirlo.</p>
       </div>
       <article id="reporte" class="reporte" aria-label="Vista previa del reporte"></article>
-      <div class="cta no-print" id="cta-registro" hidden>
-        <p>¿Te serviría pasar estos vuelos al <a id="enlace-registro-cta" href="#" target="_blank" rel="noopener noreferrer">Registro de Aspersión</a>? <a id="btn-registro-interes" href="#" target="_blank" rel="noopener noreferrer">Cuéntanos</a>.</p>
+      <div class="cta no-print" data-herramienta="registro" hidden>
+        <p>Para llevar el historial de esta aplicación (cliente, productos, condiciones) y entregar una constancia, usa el <a target="_blank" rel="noopener noreferrer">Registro de Aspersión</a>. <span id="registro-interes" hidden>¿Te serviría pasar estos vuelos automáticamente? <a id="btn-registro-interes" href="#" target="_blank" rel="noopener noreferrer">Cuéntanos</a>.</span></p>
       </div>
     </section>
   </main>
@@ -98,9 +99,14 @@
     <div class="acciones">
       <a class="btn" id="btn-feedback" href="#" target="_blank" rel="noopener noreferrer" hidden>¿Qué otra herramienta te serviría?</a>
     </div>
-    <nav class="enlaces" aria-label="Otras herramientas">
-      <a id="enlace-calculadora" href="#" target="_blank" rel="noopener noreferrer">Calculadora de aspersión</a>
-      <a id="enlace-registro" href="#" target="_blank" rel="noopener noreferrer">Registro de aspersión</a>
+    <nav class="otras" aria-label="Otras herramientas de Datos de Occidente">
+      <p class="otras-titulo">Otras herramientas gratuitas</p>
+      <ul>
+        <li data-herramienta="calculadora" hidden><a target="_blank" rel="noopener noreferrer">Calculadora de aspersión</a> · mezcla, cargas y costos antes de volar</li>
+        <li data-herramienta="registro" hidden><a target="_blank" rel="noopener noreferrer">Registro de aspersión</a> · guarda cada aplicación y entrega una constancia al cliente</li>
+      </ul>
+    </nav>
+    <nav class="enlaces" aria-label="Proyecto">
       <a id="enlace-repo" href="#" target="_blank" rel="noopener noreferrer">Código fuente</a>
       <a id="enlace-marca" href="#" target="_blank" rel="noopener noreferrer" hidden>Datos de Occidente</a>
     </nav>

@@ -7,6 +7,7 @@
     marca: 'Datos de Occidente',
     nombreHerramienta: 'Lector de bitácoras de vuelo',
     urlRepositorio: 'https://github.com/Cmr911/lector-bitacoras-drones',
+    // Otras herramientas de Datos de Occidente (enlaces cruzados).
     urlCalculadora: 'https://cmr911.github.io/calculadora-aspersion-drones/',
     urlRegistro: 'https://cmr911.github.io/registro-aspersion-drones/',
 

@@ -653,14 +653,23 @@
     var fb = feedbackHref(CFG.urlFeedback, (CFG.mensajes || {}).general);
     var b = $('btn-feedback');
     if (fb) { b.href = fb; b.hidden = false; } else { b.hidden = true; b.removeAttribute('href'); }
-    var map = [['enlace-calculadora', CFG.urlCalculadora], ['enlace-registro', CFG.urlRegistro], ['enlace-repo', CFG.urlRepositorio], ['enlace-marca', CFG.urlMarca], ['enlace-registro-cta', CFG.urlRegistro]];
+    var map = [['enlace-repo', CFG.urlRepositorio], ['enlace-marca', CFG.urlMarca]];
     map.forEach(function (x) {
       var a = $(x[0]);
       if (urlValida(x[1])) { a.href = x[1]; a.hidden = false; } else { a.removeAttribute('href'); a.hidden = true; }
     });
+    // Enlaces cruzados: cada [data-herramienta] se muestra solo si su URL está configurada.
+    var herramientas = { calculadora: CFG.urlCalculadora, registro: CFG.urlRegistro };
+    document.querySelectorAll('[data-herramienta]').forEach(function (n) {
+      var u = herramientas[n.getAttribute('data-herramienta')];
+      var ok = urlValida(u);
+      var a = n.tagName === 'A' ? n : n.querySelector('a');
+      if (a) { if (ok) { a.href = u; } else { a.removeAttribute('href'); } }
+      n.hidden = !ok;
+    });
+    // "Cuéntanos" sobre pasar vuelos al registro: solo con contacto configurado.
     var reg = feedbackHref(CFG.urlFeedback, (CFG.mensajes || {}).registro);
-    var cta = $('cta-registro');
-    if (reg && urlValida(CFG.urlRegistro)) { $('btn-registro-interes').href = reg; cta.hidden = false; } else { cta.hidden = true; }
+    if (reg) { $('btn-registro-interes').href = reg; $('registro-interes').hidden = false; } else { $('registro-interes').hidden = true; }
   }
 
   function init() {

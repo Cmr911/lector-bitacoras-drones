@@ -72,6 +72,13 @@ También funciona abriendo `index.html` directamente desde el computador.
 
 Puedes reportar errores o proponer mejoras por medio de *issues* o *pull requests*. Lo más útil es **enviar muestras anonimizadas** de exportaciones reales (sin nombres de clientes, predios ni coordenadas reales) para mejorar la detección de columnas. Mantén el proyecto sin dependencias externas y agrega pruebas para cada cambio.
 
+## Otras herramientas de Datos de Occidente
+
+Gratuitas y de código abierto; los enlaces aparecen también dentro de la app (pie de página y en el paso donde son útiles).
+
+- [Calculadora de aspersión](https://cmr911.github.io/calculadora-aspersion-drones/): mezcla, cargas y costos antes de volar.
+- [Registro de aspersión](https://cmr911.github.io/registro-aspersion-drones/): guarda cada aplicación y entrega una constancia al cliente.
+
 ## Licencia
 
 MIT © 2026 Datos de Occidente. Consulta [LICENSE](LICENSE).
