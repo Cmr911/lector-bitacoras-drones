@@ -163,7 +163,8 @@
     S.ocupado = true;
     progreso(50, 'Leyendo hoja…');
     return DDO.xlsx.readSheet(S.xlsx.zip, idx).then(function (t) {
-      if (!t.ok) { return fallo(t.message); }
+      if (t.ok && !t.rows.length) { t = { ok: false, message: 'La hoja no tiene filas de datos después del encabezado.' }; }
+      if (!t.ok) { var hs = $('cfg-hoja'); if (hs) { hs.value = String(S.xlsx.idx); } return fallo(t.message); }
       S.xlsx.idx = idx;
       S.kind = 'xlsx';
       listoTabla(t);
@@ -292,7 +293,7 @@
     N.FIELDS.forEach(function (f) {
       var sel = selectDe('map-' + f.id, opcionesCol, cfg.mapping[f.id] === null ? '' : cfg.mapping[f.id]);
       sel.addEventListener('change', function () { cfg.mapping[f.id] = sel.value === '' ? null : Number(sel.value); actualizar(); });
-      var c = campo('map-' + f.id, f.label, sel);
+      var c = campo('map-' + f.id, f.label, sel, S.kind === 'xlsx' && (f.id === 'fechaHora' || f.id === 'fecha' || f.id === 'fin') ? 'En Excel las fechas pueden verse como números (serie de Excel); se convierten al calcular.' : null);
       c.setAttribute('data-campo', f.id);
       if (f.unidad) {
         var u = N.UNITS[f.unidad];
