@@ -113,3 +113,16 @@ test('Sin hora: un solo vuelo por segmento, sin duración', () => {
   assert.equal(r.flights[0].durS, null);
   assert.equal(r.totals.durS.value, null);
 });
+
+test('9. L/ha y ha/h totales usan solo vuelos con ambos datos', () => {
+  const r = M.processSummary([
+    { inicio: T0, fin: T0 + 3600000, area: 10, vol: 100 },
+    { inicio: T0, fin: T0 + 3600000, area: null, vol: 500 },
+    { inicio: null, fin: null, durCol: null, area: 10, vol: null }
+  ]);
+  assert.equal(r.totals.lha.value, 10);
+  assert.match(r.totals.lha.motivo, /1 de 3/);
+  assert.equal(r.totals.hah.value, 10);
+  const sinPar = M.processSummary([{ inicio: null, fin: null, area: 5, vol: null }, { inicio: null, fin: null, area: null, vol: 50 }]);
+  assert.equal(sinPar.totals.lha.value, null);
+});

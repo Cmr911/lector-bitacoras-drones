@@ -207,7 +207,16 @@
   function totalsOf(flights, conTrayectoria) {
     var dur = sumOf(flights, 'durS'), area = sumOf(flights, 'area'), vol = sumOf(flights, 'vol');
     var sinDur = flights.filter(function (f) { return !fin(f.durS); }).length;
-    var d = derived(area, vol, dur);
+    // L/ha y ha/h se calculan solo con los vuelos que traen ambos datos (no se mezclan vuelos incompletos).
+    var pv = flights.filter(function (f) { return fin(f.area) && fin(f.vol); });
+    var pd = flights.filter(function (f) { return fin(f.area) && fin(f.durS); });
+    var d = pv.length ? derived(sumOf(pv, 'area'), sumOf(pv, 'vol'), null) : derived(area, vol, null);
+    if (!pv.length && fin(area) && fin(vol)) { d.lha = val(null, 'Ningún vuelo trae área y volumen a la vez'); }
+    var d2 = pd.length ? derived(sumOf(pd, 'area'), null, sumOf(pd, 'durS')) : derived(area, null, dur);
+    if (!pd.length && fin(area) && fin(dur)) { d2.hah = val(null, 'Ningún vuelo trae área y duración a la vez'); }
+    if (d.lha.value !== null && pv.length < flights.length) { d.lha.motivo = 'Calculado con ' + pv.length + ' de ' + flights.length + ' vuelos que traen área y volumen'; }
+    if (d2.hah.value !== null && pd.length < flights.length) { d2.hah.motivo = 'Calculado con ' + pd.length + ' de ' + flights.length + ' vuelos que traen área y duración'; }
+    d.hah = d2.hah;
     return {
       vuelos: flights.length,
       durS: val(dur, 'Sin tiempo de vuelo'),

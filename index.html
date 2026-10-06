@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="es-CO">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self'; style-src 'self'; img-src 'self' data:; base-uri 'none'; form-action 'none'">
+  <meta name="referrer" content="no-referrer">
+  <meta name="description" content="Convierte la exportación de vuelos de tu dron de aspersión (CSV, GPX, KML o XLSX) en un reporte imprimible. Todo se procesa en tu navegador.">
+  <title>Lector de bitácoras de vuelo · Datos de Occidente</title>
+  <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+  <a class="saltar" href="#main">Saltar al contenido</a>
+  <header class="encabezado no-print">
+    <div class="marca">
+      <span class="marca-nombre">Datos de Occidente</span>
+      <span class="marca-sub">Lector de bitácoras de vuelo</span>
+    </div>
+    <ol class="pasos" aria-label="Pasos">
+      <li id="ind-1" aria-current="step"><span class="num">1</span> Cargar</li>
+      <li id="ind-2"><span class="num">2</span> Confirmar</li>
+      <li id="ind-3"><span class="num">3</span> Reporte</li>
+    </ol>
+  </header>
+
+  <div class="alertas no-print" id="alertas" aria-live="assertive" aria-atomic="true"></div>
+
+  <main id="main" tabindex="-1">
+    <p class="aviso no-print">Herramienta de apoyo con fines informativos. Verifica siempre los datos con la plataforma de origen. Sin garantía de ningún tipo.</p>
+
+    <!-- Paso 1: cargar -->
+    <section id="paso1" aria-labelledby="t-paso1">
+      <h1 id="t-paso1">Convierte la exportación de tus vuelos en un reporte</h1>
+      <p>Carga el archivo que exportas de tu plataforma de vuelo. Obtienes tiempos, distancias, área y volumen (cuando el archivo los trae), listo para imprimir o guardar en PDF.</p>
+      <div class="zona" id="zona">
+        <input type="file" id="archivo" class="visually-hidden" accept=".csv,.tsv,.gpx,.kml,.xlsx,.kmz,.txt,.dat,.bin">
+        <label for="archivo" class="btn primario grande">Seleccionar archivo</label>
+        <p class="sutil">o arrástralo aquí</p>
+      </div>
+      <div id="progreso" class="progreso" hidden>
+        <label for="barra-progreso" id="progreso-texto">Leyendo archivo…</label>
+        <progress id="barra-progreso" max="100" value="0"></progress>
+      </div>
+      <div class="vacio">
+        <h2>¿Qué archivos acepta?</h2>
+        <ul class="lista-formatos">
+          <li><strong>CSV</strong> (separado por coma, punto y coma o tabulador) y <strong>XLSX</strong> (Excel).</li>
+          <li><strong>GPX</strong> y <strong>KML</strong> con la trayectoria.</li>
+          <li>Dos tipos: <strong>telemetría</strong> (puntos con hora y coordenadas) o <strong>resumen por vuelo</strong> (una fila por vuelo con inicio, duración, área, volumen…).</li>
+          <li>No lee registros nativos cifrados del dron o del control (.txt, .dat, .bin): exporta primero desde tu plataforma.</li>
+          <li>Hasta 20 MB y 200.000 filas.</li>
+        </ul>
+      </div>
+      <p class="privacidad"><strong>Privacidad:</strong> el archivo se procesa solo en este navegador. No se sube a ningún servidor, no usamos cookies ni analítica y no se guarda nada al cerrar la página.</p>
+    </section>
+
+    <!-- Paso 2: confirmar tipo, mapeo y unidades -->
+    <section id="paso2" aria-labelledby="t-paso2" hidden>
+      <h1 id="t-paso2" tabindex="-1">Confirma cómo leer el archivo</h1>
+      <div id="paso2-contenido"></div>
+    </section>
+
+    <!-- Paso 3: reporte -->
+    <section id="paso3" aria-labelledby="t-paso3" hidden>
+      <h1 id="t-paso3" class="no-print" tabindex="-1">Reporte de vuelos</h1>
+      <div class="panel no-print" id="opciones-reporte">
+        <details class="seccion" open>
+          <summary>Datos para el encabezado (opcional)</summary>
+          <p class="ayuda">Solo aparecen en el reporte si los llenas. No se guardan.</p>
+          <div class="rejilla">
+            <div class="campo"><label for="h-cliente">Cliente</label><input id="h-cliente" type="text" maxlength="120" autocomplete="off"></div>
+            <div class="campo"><label for="h-predio">Predio / lote</label><input id="h-predio" type="text" maxlength="120" autocomplete="off"></div>
+            <div class="campo campo-ancho"><label for="h-empresa">Empresa / operador del servicio</label><input id="h-empresa" type="text" maxlength="120" autocomplete="off"></div>
+            <div class="campo campo-ancho"><label for="h-obs">Observaciones</label><textarea id="h-obs" maxlength="1000"></textarea></div>
+          </div>
+        </details>
+        <div class="casillas">
+          <div class="casilla"><input type="checkbox" id="op-tray" checked><label for="op-tray">Mostrar trayectoria</label></div>
+          <div class="casilla"><input type="checkbox" id="op-coords"><label for="op-coords">Incluir coordenadas de inicio y fin</label></div>
+        </div>
+        <div class="acciones">
+          <button type="button" class="btn primario" id="btn-imprimir">Imprimir / guardar PDF</button>
+          <button type="button" class="btn" id="btn-csv">Exportar CSV</button>
+          <button type="button" class="btn" id="btn-ajustar">Cambiar mapeo</button>
+          <button type="button" class="btn peligro" id="btn-limpiar">Limpiar</button>
+        </div>
+        <p class="aviso-predio">El reporte puede revelar la forma y la ubicación del predio (trayectoria y coordenadas). Revísalo antes de compartirlo.</p>
+      </div>
+      <article id="reporte" class="reporte" aria-label="Vista previa del reporte"></article>
+      <div class="cta no-print" id="cta-registro" hidden>
+        <p>¿Te serviría pasar estos vuelos al <a id="enlace-registro-cta" href="#" target="_blank" rel="noopener noreferrer">Registro de Aspersión</a>? <a id="btn-registro-interes" href="#" target="_blank" rel="noopener noreferrer">Cuéntanos</a>.</p>
+      </div>
+    </section>
+  </main>
+
+  <footer class="pie no-print">
+    <p class="aviso-legal">Herramienta de apoyo con fines informativos. Verifica siempre los datos con la plataforma de origen. Sin garantía de ningún tipo. Tus archivos no salen de este navegador.</p>
+    <div class="acciones">
+      <a class="btn" id="btn-feedback" href="#" target="_blank" rel="noopener noreferrer" hidden>¿Qué otra herramienta te serviría?</a>
+    </div>
+    <nav class="enlaces" aria-label="Otras herramientas">
+      <a id="enlace-calculadora" href="#" target="_blank" rel="noopener noreferrer">Calculadora de aspersión</a>
+      <a id="enlace-registro" href="#" target="_blank" rel="noopener noreferrer">Registro de aspersión</a>
+      <a id="enlace-repo" href="#" target="_blank" rel="noopener noreferrer">Código fuente</a>
+      <a id="enlace-marca" href="#" target="_blank" rel="noopener noreferrer" hidden>Datos de Occidente</a>
+    </nav>
+    <p>Hecho por Datos de Occidente · Código abierto (MIT)</p>
+  </footer>
+
+  <script src="js/config.js"></script>
+  <script src="js/parse-csv.js"></script>
+  <script src="js/parse-geo.js"></script>
+  <script src="js/parse-xlsx.js"></script>
+  <script src="js/normalize.js"></script>
+  <script src="js/metrics.js"></script>
+  <script src="js/report.js"></script>
+  <script src="js/ui.js"></script>
+</body>
+</html>
